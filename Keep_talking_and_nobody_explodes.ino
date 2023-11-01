@@ -81,31 +81,29 @@ void loop() {
     if (totalTime > 0)
       totalTime-=1;
     
-    tempDisplayTime = totalTime;
-    for (int d=0; d<=2; d++){
-      remainder = tempDisplayTime%int(pow(10,d+1));
-      displayTime[d] = remainder/int(pow(10,d));
-      // Serial.print(displayTime[d]);
-      tempDisplayTime -= remainder;
-    }
-    // Serial.println("");
     runTime = millis();
   }
-  else{
-    for (int d=0; d<=2; d++)
-      Serial.print(displayTime[d]);
-    Serial.println("");
-    //Don't ask me why. I also don't know what the fck is wrong with the code that's causing totalTime = 0 and displayTime[0] = 0
-    //This is how i deal with it.
-    display_digit(numbers[displayTime[2]], 0, totalTime, displayTime);
-    display_digit(numbers[displayTime[1]], 1, totalTime, displayTime);
-    display_digit(numbers[displayTime[0]], 2, totalTime, displayTime);
-    // totalTime = package[0];
-    // for (int n=1; n<=3; n++)
-    //   displayTime[n-1] = package[n];
-  }
+   
+  display_digit(totalTime);
+  
 }
-void display_digit(int segments[8], int digit, int (&totalTime), int (&displayTime)[3]) {
+
+void display_digit(int totalTime){
+  tempDisplayTime = totalTime;
+  for (int d=0; d<=2; d++){
+    remainder = tempDisplayTime%int(pow(10,d+1));
+    displayTime[d] = remainder/int(pow(10,d));
+    // Serial.print(displayTime[d]);
+    tempDisplayTime -= remainder;
+  }
+  //Don't ask me why. I also don't know what the fck is wrong with the code that's causing totalTime = 0 and displayTime[0] = 0
+  //This is how i deal with it.
+  display_digit_1_segment(numbers[displayTime[2]], 0, totalTime, displayTime);
+  display_digit_1_segment(numbers[displayTime[1]], 1, totalTime, displayTime);
+  display_digit_1_segment(numbers[displayTime[0]], 2, totalTime, displayTime);
+}
+
+void display_digit_1_segment(int segments[8], int digit, int (&totalTime), int (&displayTime)[3]) {
   for (int i = 0; i <= 7; i++){
     if (segments[i]){
       pin = digitpins[digit][0][i];
