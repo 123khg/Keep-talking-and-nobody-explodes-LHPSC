@@ -45,8 +45,6 @@ const int numbers[10][8] = {
 int pin;
 int totalTime = 600;
 unsigned long int runTime = millis();
-int displayTime[3] = {0, 0, 6};
-int remainder=0, tempDisplayTime=0;
 byte buffer[10];
 
 void setup() {
@@ -89,14 +87,12 @@ void loop() {
 }
 
 void display_digit(int totalTime){
-  displayTime[0] = totalTime%10;
-  displayTime[1] = totalTime%100/10;
-  displayTime[1] = totalTime/100;
+  int displayTime[3] = {totalTime%10, totalTime%100/10, totalTime/100};
   //Don't ask me why. I also don't know what the fck is wrong with the code that's causing totalTime = 0 and displayTime[0] = 0
   //This is how i deal with it.
-  display_digit_1_segment(numbers[displayTime[2]], 0, totalTime, displayTime);
+  display_digit_1_segment(numbers[displayTime[0]], 0, totalTime, displayTime);
   display_digit_1_segment(numbers[displayTime[1]], 1, totalTime, displayTime);
-  display_digit_1_segment(numbers[displayTime[0]], 2, totalTime, displayTime);
+  display_digit_1_segment(numbers[displayTime[2]], 2, totalTime, displayTime);
 }
 
 void display_digit_1_segment(int segments[8], int digit, int (&totalTime), int (&displayTime)[3]) {
@@ -110,7 +106,7 @@ void display_digit_1_segment(int segments[8], int digit, int (&totalTime), int (
       output[pin-6] = 0;
       writeBit(output);
       //RESET PINS
-      for (int j = 0; j<=10; j++)
+      for (int j = 0; j<10; j++)
         output[j] = allLedOff[j];
     }
   }
