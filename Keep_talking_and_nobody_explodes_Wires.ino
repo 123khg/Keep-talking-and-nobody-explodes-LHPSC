@@ -6,7 +6,7 @@
 int wirepins[5] = {15, 16, 17, 20, 21};
 int wireorder[5] = {0, 0, 0, 0, 0}; //0, 1, 2, 3 correspond to Brown/Orange, Black, Yellow, Red. Gets value when init module
 
-int volt, unplugOrder=1;
+int volt, tempvolttime=0, unplugOrder=1;
 int wireTakenOut[5] = {0, 0, 0, 0, 0}; //Player's wire unplugging order
 int wireSolutionOrder[5] = {0, 0, 0, 0, 0}; //Takes in index of wirepins and copy solution from scenario
 
@@ -30,6 +30,29 @@ void setup() {
   //Read input for wire order
   for (int i=0; i<5; i++){
     volt = analogRead(wirepins[i]);
+    
+    if (volt<20){
+      while (True) {
+        volt = analogRead(wirepins[i]);
+        
+        if (volt>20) {
+          digitalWrite(LEDLOSEPIN, HIGH);
+
+          if (tempvolttime==0)
+            tempvolttime = millis();
+          else if (millis()-tempvolttime>=2000) {
+            digitalWrite(LEDLOSEPIN, LOW);
+            break;
+          }
+        }
+        else {
+          digitalWrite(LEDLOSEPIN, HIGH);
+          delay(200);
+          digitalWrite(LEDLOSEPIN, LOW);
+          delay(200);
+        }
+      } 
+    }
     if (volt>360 && volt<450)
       wireorder[i] = 0;
     else if (volt>455 && volt<555)
